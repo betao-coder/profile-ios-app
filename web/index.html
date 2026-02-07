@@ -1,55 +1,348 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>WebPanel</title>
-  <style>
-    :root{--bg1:#050815;--bg2:#0b1230;--txt:#e9ecff;--muted:rgba(233,236,255,.65);--glow1:#7c5cff;--glow2:#00e5ff;--glow3:#ff2bd6;--stroke:rgba(255,255,255,.10);}
-    *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,system-ui;}
-    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-      background:radial-gradient(1200px 600px at 20% 10%, rgba(124,92,255,.25), transparent 60%),
-      radial-gradient(900px 500px at 80% 30%, rgba(0,229,255,.18), transparent 55%),
-      radial-gradient(900px 700px at 50% 90%, rgba(255,43,214,.14), transparent 55%),
-      linear-gradient(180deg, var(--bg2), var(--bg1));
-      color:var(--txt);padding:18px;}
-    .card{width:min(440px,94vw);border-radius:24px;position:relative;padding:2px;box-shadow:0 30px 90px rgba(0,0,0,.55);overflow:hidden;}
-    .rgb{position:absolute;inset:-40px;background:conic-gradient(from 120deg, var(--glow2), var(--glow1), var(--glow3), var(--glow2));filter:blur(18px);opacity:.65;}
-    .inner{position:relative;border-radius:22px;padding:18px 16px 16px;background:linear-gradient(180deg, rgba(5,8,21,.72), rgba(5,8,21,.45));
-      border:1px solid var(--stroke);backdrop-filter:blur(18px);}
-    .top{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;margin-bottom:14px;}
-    .logo{width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);box-shadow:0 0 18px rgba(124,92,255,.35);font-weight:950;
-      background:linear-gradient(90deg, var(--glow2), var(--glow1));-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.6px;}
-    h1{margin:0;font-size:24px;line-height:1;}
-    p{margin:6px 0 0;font-size:12px;color:var(--muted);}
-    .btn{width:100%;margin-top:10px;padding:14px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.12);
-      background:linear-gradient(90deg, rgba(255,43,214,.20), rgba(124,92,255,.22), rgba(0,229,255,.18));
-      color:var(--txt);font-weight:950;letter-spacing:.4px;cursor:pointer;}
-    .btn.secondary{background:rgba(255,255,255,.05);}
-    .small{font-size:11px;color:var(--muted);margin-top:10px;text-align:center;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>ProFile Panel</title>
+
+<style>
+:root{
+  --bg1:#050815;
+  --bg2:#0b1230;
+  --txt:#e9ecff;
+  --glow1:#7c5cff;
+  --glow2:#00e5ff;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:
+    radial-gradient(circle at top, #7c5cff44, transparent),
+    linear-gradient(var(--bg2),var(--bg1));
+  color:var(--txt);
+  font-family:system-ui;
+}
+
+.panel{
+  width:95%;
+  max-width:420px;
+  border-radius:22px;
+  padding:16px;
+  background:#050815cc;
+  border:1px solid #ffffff22;
+  box-shadow:0 0 40px #7c5cff55;
+}
+
+/* TOP */
+.top{
+  text-align:center;
+  margin-bottom:12px;
+}
+
+.logo{
+  font-weight:900;
+  font-size:26px;
+  background:linear-gradient(90deg,var(--glow2),var(--glow1));
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+/* TOGGLE */
+
+.toggle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px;
+  border-radius:14px;
+  background:#ffffff08;
+  margin-bottom:8px;
+}
+
+.switch{
+  width:44px;
+  height:22px;
+  border-radius:20px;
+  background:#ffffff22;
+  position:relative;
+  cursor:pointer;
+}
+
+.switch.on{
+  background:linear-gradient(90deg,#00e5ff,#7c5cff);
+}
+
+.knob{
+  width:20px;
+  height:20px;
+  background:white;
+  border-radius:50%;
+  position:absolute;
+  top:1px;
+  left:1px;
+  transition:.2s;
+}
+
+.switch.on .knob{
+  left:23px;
+}
+
+/* SLIDER */
+
+.sliderBox{
+  margin:12px 0;
+}
+
+input[type=range]{
+  width:100%;
+}
+
+/* BUTTON */
+
+.btn{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:14px;
+  border:none;
+  font-weight:800;
+  background:linear-gradient(90deg,#ff2bd655,#7c5cff55,#00e5ff55);
+  color:white;
+  cursor:pointer;
+}
+
+.btn.secondary{
+  background:#ffffff11;
+}
+
+/* MODAL */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:#000000aa;
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.overlay.show{display:flex}
+
+.modal{
+  background:#050815;
+  border-radius:18px;
+  padding:16px;
+  width:90%;
+  max-width:340px;
+  border:1px solid #ffffff22;
+}
+</style>
 </head>
+
 <body>
-  <div class="card">
-    <div class="rgb"></div>
-    <div class="inner">
-      <div class="top">
-        <div class="logo">PF</div>
-        <div>
-          <h1>WebPanel</h1>
-          <p>iOS WebView + botões pra Atalhos</p>
-        </div>
-      </div>
 
-      <button class="btn" id="btnShortcut1">Rodar Atalho 1</button>
-      <button class="btn" id="btnShortcut2">Rodar Atalho 2</button>
-      <button class="btn secondary" id="btnAbout">Sobre</button>
+<div class="panel">
 
-      <div class="small" id="status">Pronto.</div>
+  <div class="top">
+    <div class="logo">ProFile</div>
+    <small>Neon Dashboard</small>
+  </div>
+
+  <!-- TOGGLES -->
+
+  <div class="toggle">
+    HUD Pro
+    <div class="switch" data-key="hud">
+      <div class="knob"></div>
     </div>
   </div>
 
-<script src="app.js"></script>
+  <div class="toggle">
+    Otimização
+    <div class="switch" data-key="fps">
+      <div class="knob"></div>
+    </div>
+  </div>
+
+  <div class="toggle">
+    Sensibilidade
+    <div class="switch" data-key="sens">
+      <div class="knob"></div>
+    </div>
+  </div>
+
+  <!-- SLIDER -->
+
+  <div class="sliderBox">
+    FOV: <span id="fovVal">50</span>%
+    <input id="fov" type="range" min="1" max="100" value="50">
+  </div>
+
+  <!-- BUTTONS -->
+
+  <button class="btn" id="applyBtn">APLICAR</button>
+
+  <button class="btn secondary" id="open1">
+    Abrir Atalho 1
+  </button>
+
+  <button class="btn secondary" id="open2">
+    Abrir Atalho 2
+  </button>
+
+  <button class="btn secondary" id="tipsBtn">
+    Dicas
+  </button>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div id="overlay" class="overlay">
+
+  <div class="modal">
+
+    <h3>Confirmar</h3>
+
+    <p>Deseja salvar configurações?</p>
+
+    <button class="btn" id="ok">Confirmar</button>
+    <button class="btn secondary" id="cancel">Cancelar</button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+// ===== CONFIG =====
+
+const SHORTCUT1 = "Meu Atalho 1";
+const SHORTCUT2 = "Meu Atalho 2";
+const PIN = "1234";
+
+
+// ===== STATE =====
+
+let state = {
+  hud:false,
+  fps:false,
+  sens:false,
+  fov:50
+};
+
+
+// ===== LOAD =====
+
+const saved = localStorage.getItem("profile_state");
+if(saved) state = JSON.parse(saved);
+
+
+// ===== TOGGLE =====
+
+document.querySelectorAll(".switch").forEach(sw=>{
+
+  const key = sw.dataset.key;
+
+  if(state[key]) sw.classList.add("on");
+
+  sw.onclick = ()=>{
+
+    sw.classList.toggle("on");
+    state[key] = sw.classList.contains("on");
+
+  };
+
+});
+
+
+// ===== SLIDER =====
+
+const fov = document.getElementById("fov");
+const fovVal = document.getElementById("fovVal");
+
+fov.value = state.fov;
+fovVal.innerText = state.fov;
+
+fov.oninput = ()=>{
+  state.fov = Number(fov.value);
+  fovVal.innerText = state.fov;
+};
+
+
+// ===== APPLY =====
+
+const overlay = document.getElementById("overlay");
+
+document.getElementById("applyBtn").onclick = ()=>{
+
+  const pin = prompt("Digite o PIN:");
+
+  if(pin !== PIN){
+    alert("PIN incorreto");
+    return;
+  }
+
+  overlay.classList.add("show");
+};
+
+document.getElementById("ok").onclick = ()=>{
+
+  localStorage.setItem("profile_state",JSON.stringify(state));
+
+  overlay.classList.remove("show");
+
+  alert("Salvo com sucesso!");
+
+};
+
+document.getElementById("cancel").onclick = ()=>{
+  overlay.classList.remove("show");
+};
+
+
+// ===== SHORTCUTS =====
+
+function runShortcut(name){
+
+  location.href =
+   "shortcuts://run-shortcut?name="
+   +encodeURIComponent(name);
+
+}
+
+document.getElementById("open1").onclick = ()=>{
+  runShortcut(SHORTCUT1);
+};
+
+document.getElementById("open2").onclick = ()=>{
+  runShortcut(SHORTCUT2);
+};
+
+
+// ===== TIPS =====
+
+document.getElementById("tipsBtn").onclick = ()=>{
+
+  alert(
+`Dicas:
+
+• Treine diariamente
+• Ajuste aos poucos
+• Use fone
+• Tenha calma`
+  );
+
+};
+
+</script>
+
 </body>
 </html>

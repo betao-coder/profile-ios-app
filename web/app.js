@@ -2,7 +2,6 @@ const SHORTCUT_1 = "Meu Atalho 1";
 const SHORTCUT_2 = "Meu Atalho 2";
 
 function runShortcut(name){
-  // iOS: isso abre o app Atalhos e executa o atalho
   const url = "shortcuts://run-shortcut?name=" + encodeURIComponent(name) + "&input=none";
   window.location.href = url;
 }

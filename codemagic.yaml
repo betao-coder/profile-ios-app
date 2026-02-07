@@ -14,9 +14,9 @@ workflows:
         script: |
           xcodegen generate
 
-      - name: Build (sem assinatura)
+      - name: Build archive (sem assinatura)
         script: |
-          set -e
+          set -euo pipefail
           xcodebuild \
             -project WebPanelApp.xcodeproj \
             -scheme WebPanelApp \
@@ -30,8 +30,9 @@ workflows:
 
       - name: Create unsigned IPA
         script: |
-          set -e
+          set -euo pipefail
           APP_PATH="build/WebPanelApp.xcarchive/Products/Applications/WebPanelApp.app"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleExecutable" "$APP_PATH/Info.plist" || true
           mkdir -p Payload
           cp -R "$APP_PATH" Payload/
           zip -r WebPanelApp_unsigned.ipa Payload
@@ -39,4 +40,3 @@ workflows:
 
     artifacts:
       - WebPanelApp_unsigned.ipa
-      - build/WebPanelApp.xcarchive

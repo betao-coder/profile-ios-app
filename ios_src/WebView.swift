@@ -2,20 +2,29 @@ import SwiftUI
 import WebKit
 
 struct WebView: UIViewRepresentable {
+
     func makeUIView(context: Context) -> WKWebView {
-        let cfg = WKWebViewConfiguration()
-        let webView = WKWebView(frame: .zero, configuration: cfg)
-        webView.scrollView.bounces = false
-        webView.isOpaque = false
-        webView.backgroundColor = .clear
-        return webView
+        return WKWebView()
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
-        guard let indexURL = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "web") else {
-            webView.loadHTMLString("<h3>index.html não encontrado</h3>", baseURL: nil)
+
+        guard let url = Bundle.main.url(
+            forResource: "index",
+            withExtension: "html",
+            subdirectory: "web"
+        ) else {
+
+            webView.loadHTMLString(
+                "<h2>ERRO: index.html não encontrado</h2>",
+                baseURL: nil
+            )
             return
         }
-        webView.loadFileURL(indexURL, allowingReadAccessTo: indexURL.deletingLastPathComponent())
+
+        webView.loadFileURL(
+            url,
+            allowingReadAccessTo: url.deletingLastPathComponent()
+        )
     }
 }

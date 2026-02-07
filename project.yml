@@ -1,17 +1,15 @@
-name: WebPanelApp
-options:
-  bundleIdPrefix: com.betao
+name: ProFileApp
 
 targets:
-  WebPanelApp:
+  ProFileApp:
     type: application
     platform: iOS
     deploymentTarget: "15.0"
     sources:
-      - path: ios_src
+      - ios_src
     resources:
-      - path: web
+      - web
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.betao.webpanelapp
+        PRODUCT_BUNDLE_IDENTIFIER: com.profile.app
         INFOPLIST_FILE: ios_src/Info.plist

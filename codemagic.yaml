@@ -1,0 +1,42 @@
+workflows:
+  ios_unsigned_ipa:
+    name: iOS Unsigned IPA (para Sideloadly)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    scripts:
+      - name: Install XcodeGen
+        script: |
+          brew update
+          brew install xcodegen
+
+      - name: Generate Xcode project
+        script: |
+          xcodegen generate
+
+      - name: Build (sem assinatura)
+        script: |
+          set -e
+          xcodebuild \
+            -project WebPanelApp.xcodeproj \
+            -scheme WebPanelApp \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath build/WebPanelApp.xcarchive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            archive
+
+      - name: Create unsigned IPA
+        script: |
+          set -e
+          APP_PATH="build/WebPanelApp.xcarchive/Products/Applications/WebPanelApp.app"
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          zip -r WebPanelApp_unsigned.ipa Payload
+          rm -rf Payload
+
+    artifacts:
+      - WebPanelApp_unsigned.ipa
+      - build/WebPanelApp.xcarchive

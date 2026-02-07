@@ -7,26 +7,35 @@ workflows:
     scripts:
       - name: Install XcodeGen
         script: |
+          brew update
           brew install xcodegen
 
-      - name: Generate project
+      - name: Generate Xcode project
         script: |
           xcodegen generate
 
-      - name: Build
+      - name: List projects (debug)
         script: |
+          ls
+          ls *.xcodeproj
+
+      - name: Build archive
+        script: |
+          set -e
+
           xcodebuild \
-          -project ProFileApp.xcodeproj \
-          -scheme ProFileApp \
-          -sdk iphoneos \
-          -archivePath build/app.xcarchive \
-          CODE_SIGNING_ALLOWED=NO \
-          archive
+            -project ProFileApp.xcodeproj \
+            -scheme ProFileApp \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath build/ProFile.xcarchive \
+            CODE_SIGNING_ALLOWED=NO \
+            archive
 
       - name: Create IPA
         script: |
-          mkdir Payload
-          cp -R build/app.xcarchive/Products/Applications/*.app Payload/
+          mkdir -p Payload
+          cp -R build/ProFile.xcarchive/Products/Applications/*.app Payload/
           zip -r ProFile_unsigned.ipa Payload
 
     artifacts:
